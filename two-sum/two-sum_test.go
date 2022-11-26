@@ -1,42 +1,27 @@
 package twosum
 
 import (
-	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
 // https://leetcode.com/problems/two-sum/
-
-type SortedNum struct {
-	Index int
-	Val   int
-}
+// I ended up looking this up. Turns out hashmaps are the way to go :)
 
 func twoSum(nums []int, target int) []int {
 
-	snums := make([]SortedNum, len(nums))
-	for i, v := range nums {
-		snums[i] = SortedNum{Index: i, Val: v}
-	}
-	sort.Slice(snums, func(i, j int) bool {
-		return snums[i].Val < snums[j].Val
-	})
+	addendToIndex := make(map[int]int)
 
-	largeIndex := len(snums) - 1
-	smallIndex := 0
-	sum := snums[largeIndex].Val + snums[smallIndex].Val
-	for sum != target {
-		if sum > target {
-			largeIndex--
-			smallIndex = 0
-		} else {
-			smallIndex++
+	for i, addend := range nums {
+		otherAddend := target - addend
+		if otherIndex, exists := addendToIndex[otherAddend]; exists {
+			return []int{otherIndex, i}
 		}
-		sum = snums[largeIndex].Val + snums[smallIndex].Val
+		addendToIndex[addend] = i
 	}
-	return []int{snums[smallIndex].Index, snums[largeIndex].Index}
+	panic("should have reached a solution by now")
+	// return nil
 }
 
 func Test_twoSum(t *testing.T) {
