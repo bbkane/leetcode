@@ -105,6 +105,17 @@ func Test_peopleIndexes(t *testing.T) {
 			expected: []int{0, 1, 2, 3},
 		},
 		{
+			// simplest case that breaks the tree
+			name: "11-simple",
+			args: args{
+				favoriteCompanies: [][]string{
+					{"a", "b", "c"},
+					{"a", "c"},
+				},
+			},
+			expected: []int{0},
+		},
+		{
 			name: "11",
 			args: args{
 				favoriteCompanies: [][]string{
