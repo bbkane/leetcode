@@ -1,6 +1,10 @@
 from typing import List
 
 
+def subrange_contains(subrange: List[int], n: int) -> bool:
+    return subrange[0] <= n <= subrange[1]
+
+
 # got by 15:22
 class Solution:
     def isCovered(self, ranges: List[List[int]], left: int, right: int) -> bool:
@@ -8,9 +12,7 @@ class Solution:
         numsubrangestocheck = len(ranges)
         while tocover and numsubrangestocheck:
             subrangetocheck = ranges[numsubrangestocheck - 1]
-            subrangetocheck_set = set(range(subrangetocheck[0], subrangetocheck[1] + 1))
-            # print(f"{subrangetocheck = }")
-            tocover = tocover - subrangetocheck_set
+            tocover = set(i for i in tocover if not subrange_contains(subrangetocheck, i))
             numsubrangestocheck -= 1
         # print(tocover)
         if not tocover:
