@@ -8,55 +8,62 @@ import (
 
 // -- CappedStack
 
-type CappedStack[T any] struct {
-	stack []T
+type CappedStack struct {
+	stack []int
 	index int
 }
 
-func NewCappedStack[T any](cap int) CappedStack[T] {
-	return CappedStack[T]{
-		stack: make([]T, cap),
+func NewCappedStack(cap int) CappedStack {
+	return CappedStack{
+		stack: make([]int, cap),
 		index: 0,
 	}
 }
 
-func (cs *CappedStack[T]) Push(val T) {
+func (cs *CappedStack) Push(val int) {
 	cs.stack[cs.index] = val
 	cs.index++
 }
 
-func (cs *CappedStack[T]) Pop() T {
+func (cs *CappedStack) Pop() int {
 	cs.index--
 	val := cs.stack[cs.index]
 	return val
 }
 
-func (cs *CappedStack[T]) Empty() bool {
+func (cs *CappedStack) Empty() bool {
 	return cs.index == 0
 }
 
 // -- Set
 
-type Set[T comparable] struct {
-	set map[T]struct{}
+type Set struct {
+	set map[int]struct{}
 }
 
-func NewSet[T comparable](size int) Set[T] {
-	return Set[T]{
-		set: make(map[T]struct{}, size),
+func NewSet(size int) Set {
+	return Set{
+		set: make(map[int]struct{}, size),
 	}
 }
 
-func (s *Set[T]) Add(v T) {
+func (s *Set) Add(v int) {
 	s.set[v] = struct{}{}
 }
 
-func (s *Set[T]) Contains(v T) bool {
+func (s *Set) Contains(v int) bool {
 	_, exists := s.set[v]
 	return exists
 }
 
 func validPath(n int, edges [][]int, source int, destination int) bool {
+	if source == destination {
+		return true
+	}
+	// a one-node graph and source doesn't equal dest
+	if n == 1 {
+		return false
+	}
 	// convert edgelist to graph (map)
 	graph := make(map[int][]int, n)
 	for _, edge := range edges {
@@ -64,11 +71,11 @@ func validPath(n int, edges [][]int, source int, destination int) bool {
 		graph[edge[1]] = append(graph[edge[1]], edge[0])
 	}
 	// make a set of "explored" nodes
-	explored := NewSet[int](n)
+	explored := NewSet(n)
 	// make a stack/queue of "toExplore" nodes
 	// upper bound is number of edges (because len(edges) >= len(nodes))
 	// and it's a bidirectional graph so *2
-	toExplore := NewCappedStack[int](len(edges) * 2)
+	toExplore := NewCappedStack(len(edges) * 2)
 	toExplore.Push(source)
 	// for everything in toExplore
 	for !toExplore.Empty() {
