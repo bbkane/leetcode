@@ -76,14 +76,18 @@ class Solution:
             ),
             priority=0,
         )
+        seen = set()
         while not pq.empty():
             current = pq.pop_task()
+            seen.add(current.flight.to)
             if current.flight.to == dst:
                 return current.total_price
 
             if current.total_hops > k:
                 continue
             for child in graph[current.flight.to]:
+                if child in seen:
+                    continue
                 pq.add_task(
                     Node(
                         flight=child,
